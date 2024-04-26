@@ -2715,7 +2715,6 @@ FHoudiniParameterDetails::CreateWidgetFloat(
 
 	TSharedRef< SVerticalBox > VerticalBox = SNew(SVerticalBox);
 
-	//TSharedRef< SVerticalBox > VerticalBox = SNew(SVerticalBox);
 	if (MainParam->GetTupleSize() == 3)
 	{
 		// Should we swap Y and Z fields (only relevant for Vector3)
@@ -2802,7 +2801,7 @@ FHoudiniParameterDetails::CreateWidgetFloat(
 					.Visibility(EVisibility::Visible)
 					[
 						SNew(SImage)
-						.Image(MainParam->IsUniformLocked() ? _GetEditorStyle().GetBrush("Genericlock") : _GetEditorStyle().GetBrush("GenericUnlock"))
+						.Image(MainParam->IsUniformLocked() ? _GetEditorStyle().GetBrush("Icons.Lock") : _GetEditorStyle().GetBrush("Icons.Unlock"))
 					]
 					.OnClicked_Lambda([FloatParams, MainParam]()
 					{
