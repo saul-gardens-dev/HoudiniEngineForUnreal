@@ -327,14 +327,16 @@ FHoudiniAssetComponentDetails::CustomizeDetails(IDetailLayoutBuilder& DetailBuil
 		if(bIsIndieLicense && MainComponent->GetNumParameters() > 0)
 			AddIndieLicenseRow(HouParameterCategory);
 
+		TArray<TArray<TWeakObjectPtr<UHoudiniParameter>>> JoinedParams;
+
 		// Iterate through the component's parameters
 		for (int32 ParamIdx = 0; ParamIdx < MainComponent->GetNumParameters(); ParamIdx++)
-		{	
+		{
 			// We only want to create root parameters here, they will recursively create child parameters.
 			UHoudiniParameter* CurrentParam = MainComponent->GetParameterAt(ParamIdx);
 			if (!IsValid(CurrentParam))
 				continue;
-			
+
 			// TODO: remove ? unneeded?
 			// ensure the parameter is actually owned by a HAC
 			/*const TWeakObjectPtr<UHoudiniAssetComponent> Owner = Cast<UHoudiniAssetComponent>(CurrentParam->GetOuter());
@@ -342,7 +344,8 @@ FHoudiniAssetComponentDetails::CustomizeDetails(IDetailLayoutBuilder& DetailBuil
 				continue;*/
 
 			// Build an array of edited parameter for multi edit
-			TArray<TWeakObjectPtr<UHoudiniParameter>> EditedParams;
+			JoinedParams.Emplace();
+			auto& EditedParams = JoinedParams.Last();
 			EditedParams.Add(CurrentParam);
 
 			// Add the corresponding params in the other HAC
@@ -353,7 +356,7 @@ FHoudiniAssetComponentDetails::CustomizeDetails(IDetailLayoutBuilder& DetailBuil
 					continue;
 
 				// Linked params should match the main param! If not try to find one that matches
-				if ( !LinkedParam->Matches(*CurrentParam) )
+				if (!LinkedParam->Matches(*CurrentParam))
 				{
 					LinkedParam = MainComponent->FindMatchingParameter(CurrentParam);
 					if (!IsValid(LinkedParam) || LinkedParam->IsChildParameter())
@@ -363,7 +366,13 @@ FHoudiniAssetComponentDetails::CustomizeDetails(IDetailLayoutBuilder& DetailBuil
 				EditedParams.Add(LinkedParam);
 			}
 
-			ParameterDetails->CreateWidget(HouParameterCategory, EditedParams);
+			if (ParameterDetails->ShouldJoinNext(*CurrentParam))
+			{
+				continue;
+			}
+
+			ParameterDetails->CreateWidget(HouParameterCategory, JoinedParams);
+			JoinedParams.Empty();
 		}
 
 		/***   HOUDINI HANDLE DETAILS   ***/

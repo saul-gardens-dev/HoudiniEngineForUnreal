@@ -1539,7 +1539,7 @@ UHoudiniPublicAPIAssetWrapper::SetRampParameterNumPoints_Implementation(FName In
 
 		// Update the ramp's widget if it is currently visible/selected
 		const bool bForceFullUpdate = true;
-		FHoudiniEngineUtils::UpdateEditorProperties(Param, bForceFullUpdate);
+		FHoudiniEngineUtils::UpdateEditorProperties(bForceFullUpdate);
 	}
 	else
 	{
@@ -1944,7 +1944,7 @@ UHoudiniPublicAPIAssetWrapper::SetFloatRampParameterPoints_Implementation(
 	{
 		// Update the ramp's widget if it is currently visible/selected
 		const bool bForceFullUpdate = true;
-		FHoudiniEngineUtils::UpdateEditorProperties(Param, bForceFullUpdate);
+		FHoudiniEngineUtils::UpdateEditorProperties(bForceFullUpdate);
 	}
 	
 	return true;
@@ -2210,7 +2210,7 @@ UHoudiniPublicAPIAssetWrapper::SetColorRampParameterPoints_Implementation(
 	{
 		// Update the ramp's widget if it is currently visible/selected
 		const bool bForceFullUpdate = true;
-		FHoudiniEngineUtils::UpdateEditorProperties(Param, bForceFullUpdate);
+		FHoudiniEngineUtils::UpdateEditorProperties(bForceFullUpdate);
 	}
 
 	return true;
@@ -3905,7 +3905,7 @@ bool UHoudiniPublicAPIAssetWrapper::SetRampParameterPointValue(
 
 			// Update the ramp's widget if it is currently visible/selected
 			const bool bForceFullUpdate = true;
-			FHoudiniEngineUtils::UpdateEditorProperties(Param, bForceFullUpdate);
+			FHoudiniEngineUtils::UpdateEditorProperties(bForceFullUpdate);
 		}
 		else
 		{

@@ -1878,6 +1878,9 @@ FHoudiniEngineCommands::RefineHoudiniProxyMeshesToStaticMeshesNotifyDone(const u
 		if (OnHoudiniProxyMeshesRefinedDelegate.IsBound())
 			OnHoudiniProxyMeshesRefinedDelegate.Broadcast(HAC, EHoudiniProxyRefineResult::Skipped);
 	}
+
+	// Update details to display the new inputs
+	FHoudiniEngineUtils::UpdateEditorProperties(true);
 }
 
 void
