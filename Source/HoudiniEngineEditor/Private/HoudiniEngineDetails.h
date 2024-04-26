@@ -127,7 +127,22 @@ public:
 	// Helper to check if InWeakObjectPointer is valid or not. If not valid, the filepath and line number where the check
 	// occurred is logged.
 	template <class T>
-	static bool IsValidWeakObjectPointer(const TWeakObjectPtr<T>& InWeakObjectPointer, const bool bInLogInvalid=false, const FString& InFilePath=FString(), const int32 InLineNumber=INDEX_NONE);
+	static bool IsValidWeakObjectPointer(
+		const TWeakObjectPtr<T>& InWeakObjectPointer,
+		const bool bInLogInvalid=false,
+		const FString& InFilePath=FString(),
+		const int32 InLineNumber=INDEX_NONE);
+
+private:
+	static void SetCookFolderPath(
+		const FText& InPathText,
+		const TWeakObjectPtr<UHoudiniAssetComponent>& InMainHAC,
+		const TArray<TWeakObjectPtr<UHoudiniAssetComponent>>& InHACs);
+
+	static void SetBakeFolderPath(
+		const FText& InPathText,
+		const TWeakObjectPtr<UHoudiniAssetComponent>& InMainHAC,
+		const TArray<TWeakObjectPtr<UHoudiniAssetComponent>>& InHACs);
 };
 
 
