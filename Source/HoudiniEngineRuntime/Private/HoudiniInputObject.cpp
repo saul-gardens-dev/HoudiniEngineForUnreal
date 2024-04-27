@@ -3173,8 +3173,8 @@ UHoudiniInputObject::GetInputObjectTypeFromObject(UObject* InObject)
 			return EHoudiniInputObjectType::Object;
 		}
 	}
-
-	return EHoudiniInputObjectType::Invalid;
+	// unreachable
+	// return EHoudiniInputObjectType::Invalid;
 }
 
 

@@ -3922,9 +3922,9 @@ FHoudiniMaterialTranslator::GetAndValidateMaterialInstanceParameterValue(
 	OutMaterialParameterValue.ParamType = EHoudiniUnrealMaterialParameterType::Vector;
 	OutMaterialParameterValue.SetValue(NewLinearColor);
 	return true;
-#endif
-
+#else
 	return false;
+#endif
 }
 
 

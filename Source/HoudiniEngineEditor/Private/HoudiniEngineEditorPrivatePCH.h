@@ -31,6 +31,7 @@
 #include "HoudiniEngineRuntimePrivatePCH.h"
 
 #include "Editor.h"
+#include "LevelEditor.h"
 #include "Runtime/Launch/Resources/Version.h"
 
 #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION > 0
@@ -196,3 +197,33 @@ static const FSlateBrush* _GetBrush(FName PropertyName)
     return FEditorStyle::GetBrush(PropertyName);
 #endif
 }
+
+// Wrapper to manage code compatibility across multiple UE versions
+static const FMargin _GetMargin(FName PropertyName)
+{
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION > 0
+    return FAppStyle::GetMargin(PropertyName);
+#else
+    return FEditorStyle::GetMargin(PropertyName);
+#endif
+}
+
+// Wrapper to manage code compatibility across multiple UE versions
+static const float _GetFloat(FName PropertyName)
+{
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION > 0
+    return FAppStyle::GetFloat(PropertyName);
+#else
+    return FEditorStyle::GetFloat(PropertyName);
+#endif
+}
+
+static FName _GetPlacementBrowserName()
+{
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >=2
+    return LevelEditorTabIds::PlacementBrowser;
+#else
+    return FName(TEXT("PlacementBrowser"));
+#endif
+}
+

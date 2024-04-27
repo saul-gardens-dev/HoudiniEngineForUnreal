@@ -251,7 +251,7 @@ FHoudiniEngineManager::Tick(float DeltaTime)
 		if (dProcessTimeLimit > 0.0
 			&& dNow - dProcessStartTime > dProcessTimeLimit)
 		{
-			HOUDINI_LOG_MESSAGE(TEXT("Houdini Engine Manager: Stopped processing after %F seconds."), (dNow - dProcessStartTime));
+			HOUDINI_LOG_MESSAGE(TEXT("Houdini Engine Manager: Stopped processing after %f seconds."), (dNow - dProcessStartTime));
 			break;
 		}
 
@@ -344,7 +344,7 @@ FHoudiniEngineManager::Tick(float DeltaTime)
 			dNow = FPlatformTime::Seconds();
 			if (dProcessTimeLimit > 0.0	&& dNow - dProcessStartTime > dProcessTimeLimit)
 			{
-				HOUDINI_LOG_MESSAGE(TEXT("Houdini Engine Manager: Stopped processing after %F seconds."), (dNow - dProcessStartTime));
+				HOUDINI_LOG_MESSAGE(TEXT("Houdini Engine Manager: Stopped processing after %f seconds."), (dNow - dProcessStartTime));
 				break;
 			}
 
