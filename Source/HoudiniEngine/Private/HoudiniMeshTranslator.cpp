@@ -290,7 +290,13 @@ void FHoudiniMeshTranslator::BuildSKFromImportData(SKBuildSettings& BuildSetting
 		SortBonesByParent(SkeletalMeshImportData);//only sort if new skeleton
 	}
 
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION > 4
+	PRAGMA_DISABLE_DEPRECATION_WARNINGS
 	BuildSettings.SKMesh->SaveLODImportedData(0, SkeletalMeshImportData);  //Import the ImportData
+	PRAGMA_ENABLE_DEPRECATION_WARNINGS
+#else
+	BuildSettings.SKMesh->SaveLODImportedData(0, SkeletalMeshImportData);  //Import the ImportData
+#endif
 
 	int32 SkeletalDepth = 0;
 	FReferenceSkeleton& RefSkeleton = BuildSettings.SKMesh->GetRefSkeleton();
@@ -1155,11 +1161,10 @@ FHoudiniMeshTranslator::SKImportData(SKBuildSettings& BuildSettings)
 	SkeletalMeshImportData.Faces.Num(),
 	SkeletalMeshImportData.Influences.Num()
 	);
-
-	
-
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 4
 	SkeletalMeshImportData.bDiffPose = false;
 	SkeletalMeshImportData.bUseT0AsRefPose = false;
+#endif
 	//SkeletalMeshImportData.bHasTangents = false;
 	//SkeletalMeshImportData.bHasNormals = false;
 	SkeletalMeshImportData.bHasVertexColors = false;
