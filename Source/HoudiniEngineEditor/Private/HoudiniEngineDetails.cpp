@@ -43,7 +43,6 @@
 #include "HoudiniEngineStyle.h"
 #include "HoudiniEngineUtils.h"
 #include "HoudiniLandscapeTranslator.h"
-#include "HoudiniNodeSyncComponent.h"
 #include "HoudiniPackageParams.h"
 #include "HoudiniParameter.h"
 #include "SSelectFolderPathDialog.h"

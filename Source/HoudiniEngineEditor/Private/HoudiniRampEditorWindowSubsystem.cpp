@@ -27,6 +27,7 @@
 #include "HoudiniRampEditorWindowSubsystem.h"
 
 #include "SHoudiniRampBase.h"
+#include "LevelEditor.h"
 
 void UHoudiniRampEditorWindowSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {

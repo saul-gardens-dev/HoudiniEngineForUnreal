@@ -28,6 +28,7 @@
 
 #include "CoreMinimal.h"
 #include "EditorSubsystem.h"
+#include "Widgets/Layout/SBorder.h"
 
 #include "HoudiniRampEditorWindowSubsystem.generated.h"
 
