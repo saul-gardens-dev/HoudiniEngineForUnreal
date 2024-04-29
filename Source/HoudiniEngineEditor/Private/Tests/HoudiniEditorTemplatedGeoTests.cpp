@@ -29,6 +29,7 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "HoudiniEditorTestUtils.h"
 #include "HoudiniPublicAPIAssetWrapper.h"
+#include "Runtime/Launch/Resources/Version.h"
 
 #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3
 	#include "HAL/FileManager.h"
