@@ -29,6 +29,8 @@
 #include "SHoudiniRampBase.h"
 #include "LevelEditor.h"
 
+#define LOCTEXT_NAMESPACE HOUDINI_LOCTEXT_NAMESPACE
+
 void UHoudiniRampEditorWindowSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
@@ -100,3 +102,5 @@ UHoudiniRampEditorWindowSubsystem::OnActorSelectionChanged(
 	DestroyAllEditorWindows();
 	PreviousActorSelection = NewSelection;
 }
+
+#undef LOCTEXT_NAMESPACE
