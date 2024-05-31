@@ -483,15 +483,16 @@ FHoudiniEngineDetails::CreateGenerateWidgets(
 	{
 		TSharedPtr<SImage> ResetParametersImage;
 		ResetParametersButtonHorizontalBox->AddSlot()
-		.Padding(5.0, 0.0, 0.0, 0.0)
-		//.FillWidth(4.2f)
-		.VAlign(VAlign_Center)
-		.HAlign(HAlign_Center)
-		.AutoWidth()
+		.MaxWidth(16.0f)
+		//.Padding(0.0f, 0.0f, 3.0f, 0.0f)
 		[
-			SNew(STextBlock)
-			//.MinDesiredWidth(160.f)
-			.Text(FText::FromString("Reset Parameters"))
+			SNew(SBox)
+			.WidthOverride(16.0f)
+			.HeightOverride(16.0f)
+			[
+				SAssignNew(ResetParametersImage, SImage)
+				//.ColorAndOpacity(FSlateColor::UseForeground())
+			]
 		];
 
 		ResetParametersImage->SetImage(
@@ -505,11 +506,12 @@ FHoudiniEngineDetails::CreateGenerateWidgets(
 	.Padding(5.0, 0.0, 0.0, 0.0)
 	//.FillWidth(4.2f)
 	.VAlign(VAlign_Center)
+	.HAlign(HAlign_Center)
 	.AutoWidth()
 	[
 		SNew(STextBlock)
 		//.MinDesiredWidth(160.f)
-		.Text(FText::FromString("Reset Parameters"))		
+		.Text(FText::FromString("Reset Parameters"))
 	];
 
 

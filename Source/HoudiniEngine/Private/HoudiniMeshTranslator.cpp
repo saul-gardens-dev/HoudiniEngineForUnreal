@@ -290,11 +290,7 @@ void FHoudiniMeshTranslator::BuildSKFromImportData(SKBuildSettings& BuildSetting
 		SortBonesByParent(SkeletalMeshImportData);//only sort if new skeleton
 	}
 
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION > 4
-	PRAGMA_DISABLE_DEPRECATION_WARNINGS
-	BuildSettings.SKMesh->SaveLODImportedData(0, SkeletalMeshImportData);  //Import the ImportData
-	PRAGMA_ENABLE_DEPRECATION_WARNINGS
-#else
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 4
 	BuildSettings.SKMesh->SaveLODImportedData(0, SkeletalMeshImportData);  //Import the ImportData
 #endif
 
@@ -322,6 +318,13 @@ void FHoudiniMeshTranslator::BuildSKFromImportData(SKBuildSettings& BuildSetting
 	NewLODInfo.ReductionSettings.NumOfVertPercentage = 1.0f;
 	NewLODInfo.ReductionSettings.MaxDeviationPercentage = 0.0f;
 	NewLODInfo.LODHysteresis = 0.02f;
+
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4
+	PRAGMA_DISABLE_DEPRECATION_WARNINGS
+		BuildSettings.SKMesh->SaveLODImportedData(ImportLODModelIndex, SkeletalMeshImportData);
+	PRAGMA_ENABLE_DEPRECATION_WARNINGS
+#endif
+
 	FBoxSphereBounds3f bsb3f = FBoxSphereBounds3f(BoundingBox);
 	BuildSettings.SKMesh->SetImportedBounds(FBoxSphereBounds(bsb3f));
 	// Store whether or not this mesh has vertex colors
