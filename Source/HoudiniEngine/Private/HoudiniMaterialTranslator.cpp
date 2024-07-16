@@ -1763,10 +1763,10 @@ FHoudiniMaterialTranslator::CreateMaterialComponentOpacityMask(
 	// If we have opacity texture parameter.
 	if (ParmOpacityTextureId >= 0)
 	{
-		TArray< char > ImageBuffer;
+		TArray<char> ImageBuffer;
 
 		// Get image planes of opacity map.
-		TArray< FString > OpacityImagePlanes;
+		TArray<FString> OpacityImagePlanes;
 		bool bFoundImagePlanes = FHoudiniMaterialTranslator::HapiGetImagePlanes(
 			ParmOpacityTextureId, InMaterialInfo, OpacityImagePlanes);
 
@@ -1775,11 +1775,23 @@ FHoudiniMaterialTranslator::CreateMaterialComponentOpacityMask(
 
 		bool bColorAlphaFound = (OpacityImagePlanes.Contains(TEXT(HAPI_UNREAL_MATERIAL_TEXTURE_ALPHA)) && OpacityImagePlanes.Contains(TEXT(HAPI_UNREAL_MATERIAL_TEXTURE_COLOR)));
 
-		if (bFoundImagePlanes && bColorAlphaFound)
+		if (bFoundImagePlanes && OpacityImagePlanes.Contains(TEXT(HAPI_UNREAL_MATERIAL_TEXTURE_COLOR)))
 		{
-			ImagePacking = HAPI_IMAGE_PACKING_RGBA;
-			PlaneType = HAPI_UNREAL_MATERIAL_TEXTURE_COLOR_ALPHA;
-			CreateTexture2DParameters.bUseAlpha = true;
+			if (OpacityImagePlanes.Contains(TEXT(HAPI_UNREAL_MATERIAL_TEXTURE_ALPHA)))
+			{
+				ImagePacking = HAPI_IMAGE_PACKING_RGBA;
+				PlaneType = HAPI_UNREAL_MATERIAL_TEXTURE_COLOR_ALPHA;
+				CreateTexture2DParameters.bUseAlpha = true;
+			}
+			else
+			{
+				// We still need to have the Alpha plane, just not the CreateTexture2DParameters
+				// alpha option. This is because all texture data from Houdini Engine contains
+				// the alpha plane by default.
+				ImagePacking = HAPI_IMAGE_PACKING_RGBA;
+				PlaneType = HAPI_UNREAL_MATERIAL_TEXTURE_COLOR_ALPHA; 
+				CreateTexture2DParameters.bUseAlpha = false;
+			}
 		}
 		else
 		{
@@ -1900,6 +1912,9 @@ FHoudiniMaterialTranslator::CreateMaterialComponentOpacityMask(
 
 				bExpressionCreated = true;
 			}
+
+			// Switch the material's blend mode to Masked
+			Material->BlendMode = BLEND_Masked;
 
 			// Cache the texture package
 			OutPackages.AddUnique(TextureOpacityPackage);
