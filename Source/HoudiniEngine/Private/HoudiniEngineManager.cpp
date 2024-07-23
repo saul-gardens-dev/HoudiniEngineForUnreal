@@ -682,6 +682,10 @@ FHoudiniEngineManager::ProcessComponent(UHoudiniAssetComponent* HAC)
 
 		case EHoudiniAssetState::None:
 		{
+			// Update our handles if needed
+			// This may modify parameters so we need to call this before NeedUpdate
+			FHoudiniHandleTranslator::UpdateHandlesIfNeeded(HAC);
+
 			// Do nothing unless the HAC has been updated
 			if (HAC->NeedUpdate())
 			{
@@ -1224,8 +1228,8 @@ FHoudiniEngineManager::PostCook(UHoudiniAssetComponent* HAC, const bool& bSucces
 		FHoudiniOutputTranslator::UpdateOutputs(HAC, ForceUpdate, bHasHoudiniStaticMeshOutput);
 		HAC->SetNoProxyMeshNextCookRequested(false);
 
-		// Handles have to be updated after parameters
-		FHoudiniHandleTranslator::UpdateHandles(HAC);  
+		// Handles have to be built after the parameters
+		FHoudiniHandleTranslator::BuildHandles(HAC);
 
 		// Clear the HasBeenLoaded flag
 		if (HAC->HasBeenLoaded())
