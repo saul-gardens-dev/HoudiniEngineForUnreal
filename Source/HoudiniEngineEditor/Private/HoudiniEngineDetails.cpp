@@ -1377,6 +1377,31 @@ FHoudiniEngineDetails::CreateAssetOptionsWidgets(
 		}
 	};
 
+	auto IsCheckedEnableCurveEditingLambda = [MainHAC]()
+	{
+		if (!IsValidWeakPointer(MainHAC))
+			return ECheckBoxState::Unchecked;
+
+		return MainHAC->bEnableCurveEditing ? ECheckBoxState::Checked : ECheckBoxState::Unchecked;
+	};
+
+	auto OnCheckStateChangedEnableCurveEditingLambda = [InHACs](ECheckBoxState NewState)
+	{
+		const bool bChecked = (NewState == ECheckBoxState::Checked);
+		for (auto& NextHAC : InHACs)
+		{
+			if (!IsValidWeakPointer(NextHAC))
+				continue;
+
+			if (NextHAC->bEnableCurveEditing == bChecked)
+				continue;
+
+			NextHAC->bEnableCurveEditing = bChecked;
+			NextHAC->MarkPackageDirty();
+		}
+	};
+
+
 	auto IsCheckedDoNotGenerateOutputsLambda = [MainHAC]()
 	{
 		if (!IsValidWeakPointer(MainHAC))
@@ -1724,7 +1749,7 @@ FHoudiniEngineDetails::CreateAssetOptionsWidgets(
 		]
 	];
 
-	// Push Transform to Houdini check box
+	// Landscape Temp Layers
 	TooltipText = LOCTEXT("HoudiniEngineTempLandscapeLayersTooltip", "Cooking use temporary landscape layers.");
 	SecondLeftColumnVerticalBox->AddSlot()
 		.AutoHeight()
@@ -1746,6 +1771,31 @@ FHoudiniEngineDetails::CreateAssetOptionsWidgets(
 		.ToolTipText(TooltipText)
 		]
 		];
+
+
+	// Curve Editing
+	TooltipText = LOCTEXT("HoudiniEngineEnableCurveEditingTooltip", "Enable curve editing.");
+	SecondLeftColumnVerticalBox->AddSlot()
+		.AutoHeight()
+		[
+			SNew(SHorizontalBox)
+			+ SHorizontalBox::Slot()
+		.FillWidth(4.0f)
+		[
+			SNew(STextBlock)
+			.MinDesiredWidth(160.f)
+		.Text(LOCTEXT("HoudiniEngineEnableCurveEditingToolLabel", "Enable Curve Editing"))
+		.ToolTipText(TooltipText)
+		]
+	+ SHorizontalBox::Slot()
+		[
+			SNew(SCheckBox)
+			.OnCheckStateChanged_Lambda(OnCheckStateChangedEnableCurveEditingLambda)
+		.IsChecked_Lambda(IsCheckedEnableCurveEditingLambda)
+		.ToolTipText(TooltipText)
+		]
+		];
+
 
 	// Use whole widget
 	CheckBoxesRow.WholeRowWidget.Widget = WidgetBox;

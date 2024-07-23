@@ -242,6 +242,8 @@ UHoudiniAssetComponent::UHoudiniAssetComponent(const FObjectInitializer & Object
 	ActorBakeOption = EHoudiniEngineActorBakeOption::OneActorPerComponent;
 	bAllowPlayInEditorRefinement = false;
 	bNeedToUpdateEditorProperties = false;
+	bLandscapeUseTempLayers = false;
+	bEnableCurveEditing = true;
 #endif
 
 	//
