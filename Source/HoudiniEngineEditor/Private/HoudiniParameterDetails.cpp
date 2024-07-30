@@ -1092,7 +1092,7 @@ FHoudiniParameterDetails::CreateWidget(
 		}
 	}
 
-	// Remove a divider lines recurrsively if last joined parameter hits the end of a tab
+	// Remove a divider lines recursively if last joined parameter hits the end of a tab
 	{
 		const auto& LastLinkedParams = InJoinedParams.Last();
 		if (LastLinkedParams.IsEmpty())
@@ -1949,7 +1949,8 @@ FHoudiniParameterDetails::CreateWidgetFloat(
 			ChangeFloatValueAt(Val, 2, bDoChange, FloatParams);
 		};
 
-		VerticalBox->AddSlot().Padding(2, 2, 5, 2)
+		VerticalBox->AddSlot()
+		.Padding(2, 2, 5, 2)
 		[
 			SNew(SHorizontalBox)
 			+ SHorizontalBox::Slot()
@@ -2013,7 +2014,10 @@ FHoudiniParameterDetails::CreateWidgetFloat(
 			.VAlign(VAlign_Center)
 			[
 				SNew(SHorizontalBox)
-				+ SHorizontalBox::Slot().AutoWidth().HAlign(HAlign_Right).VAlign(VAlign_Center)
+				+ SHorizontalBox::Slot()
+				.AutoWidth()
+				.HAlign(HAlign_Right)
+				.VAlign(VAlign_Center)
 				[
 					SNew(SButton)
 					.ButtonStyle(_GetEditorStyle(), "NoBorder")
@@ -2043,7 +2047,10 @@ FHoudiniParameterDetails::CreateWidgetFloat(
 					})
 				]
 
-				+ SHorizontalBox::Slot().AutoWidth().HAlign(HAlign_Left).VAlign(VAlign_Center)
+				+ SHorizontalBox::Slot()
+				.AutoWidth()
+				.HAlign(HAlign_Left)
+				.VAlign(VAlign_Center)
 				[
 					SNew(SButton)
 					.ToolTipText(LOCTEXT("RevertToDefault", "Revert to default"))
@@ -2080,7 +2087,8 @@ FHoudiniParameterDetails::CreateWidgetFloat(
 			.Padding(2, 2, 5, 2)
 			[
 				SNew(SHorizontalBox)
-				+ SHorizontalBox::Slot().FillWidth(1.0f)
+				+ SHorizontalBox::Slot()
+				.FillWidth(1.0f)
 				[
 					SAssignNew(NumericEntryBox, SNumericEntryBox< float >)
 					.AllowSpin(true)
@@ -3032,25 +3040,29 @@ FHoudiniParameterDetails::CreateWidgetLabel(
 	if (!IsValidWeakPointer(MainParam))
 		return;
 
-	TSharedRef<SVerticalBox> VerticalBox = SNew(SVerticalBox);
+	TSharedRef<SHorizontalBox> HorizontalBox = SNew(SHorizontalBox);
 
 	for (int32 Index = 0; Index < MainParam->GetTupleSize(); ++Index)
 	{
 		FString NextLabelString = MainParam->GetStringAtIndex(Index);
 		FText ParameterLabelText = FText::FromString(NextLabelString);
+
+		FText ParamTooltipText = FText::FromString("Column " + FString::FromInt(Index) + ": " + NextLabelString);
 		
 		TSharedPtr<STextBlock> TextBlock;
-
 		// Add Label UI.
-		VerticalBox->AddSlot().Padding(1, 2, 16, 2)
+		HorizontalBox->AddSlot()
+		.Padding(1, 2, 16, 2)
+		.AutoWidth()
 		[
 			SAssignNew(TextBlock, STextBlock)
 			.Text(ParameterLabelText)
+			.ToolTipText(ParamTooltipText)
 			.Font(_GetEditorStyle().GetFontStyle(TEXT("PropertyWindow.NormalFont")))
 		];
 	}
 
-	LabelledParameter->SetContent(VerticalBox);
+	LabelledParameter->SetContent(HorizontalBox);
 }
 
 void
