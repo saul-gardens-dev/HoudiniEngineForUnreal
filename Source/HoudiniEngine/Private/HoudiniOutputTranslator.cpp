@@ -39,6 +39,7 @@
 #include "HoudiniAsset.h"
 #include "HoudiniAssetActor.h"
 #include "HoudiniAssetComponent.h"
+#include "HoudiniNodeSyncComponent.h"
 #include "HoudiniSplineComponent.h"
 #include "HoudiniEngineRuntime.h"
 #include "HoudiniInput.h"
