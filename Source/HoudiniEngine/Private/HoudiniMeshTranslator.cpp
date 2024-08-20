@@ -709,31 +709,6 @@ FHoudiniMeshTranslator::CreateStaticMeshFromHoudiniGeoPartObject(
 		return true;
 	}
 
-	// NOTE: We can't handle skeletal meshes here. Skeletal meshes now consist of multiple HGPOs and we have to
-	// aggregate the HGPO that belong to the same Skeletal Mesh and process them as a single unit.
-	// // Handle Skeletal Meshes here
-	// if (FHoudiniSkeletalMeshTranslator::HasSkeletalMeshData(InHGPO.GeoId, InHGPO.PartId))
-	// {
-	// 	FHoudiniSkeletalMeshTranslator SKMeshTranslator;
-	// 	SKMeshTranslator.SetHoudiniSkeletalMeshParts(InHGPO);
-	// 	SKMeshTranslator.SetInputObjects(InOutputObjects);
-	// 	SKMeshTranslator.SetOutputObjects(OutOutputObjects);
-	// 	SKMeshTranslator.SetPackageParams(InPackageParams, true);
-	//
-	// 	if (SKMeshTranslator.CreateSkeletalMesh_SkeletalMeshImportData())
-	// 	{
-	// 		// Copy the output objects/materials
-	// 		OutOutputObjects = SKMeshTranslator.OutputObjects;
-	// 		//AssignmentMaterialMap = SKMT.OutputAssignmentMaterials;
-	//
-	// 		return true;
-	// 	}
-	// 	else
-	// 	{
-	// 		return false;
-	// 	}
-	// }
-
 	// Create a new mesh translator to handle the output data creation
 	FHoudiniMeshTranslator CurrentTranslator;
 	CurrentTranslator.ForceRebuild = InForceRebuild;
@@ -4691,22 +4666,6 @@ FHoudiniMeshTranslator::CreateStaticMesh_MeshDescription()
 			continue;
 		
 		const FHoudiniOutputObjectIdentifier& CurrentObjId = Current.Key;
-		// Update property attributes on the SM
-		TArray<FHoudiniGenericAttribute> PropertyAttributes;
-		if (FHoudiniEngineUtils::GetGenericPropertiesAttributes(
-			CurrentObjId.GeoId,
-			CurrentObjId.PartId,
-			true,
-			CurrentObjId.PrimitiveIndex,
-			INDEX_NONE,
-			CurrentObjId.PointIndex,
-			PropertyAttributes))
-		{
-			// Defer post edit change calls until after all property values have been set, since the static mesh
-			// build function is called from PostEditChangeProperty.
-			constexpr bool bDeferPostEditChangePropertyCalls = true;
-			FHoudiniEngineUtils::UpdateGenericPropertiesAttributes(SM, PropertyAttributes, 0, bDeferPostEditChangePropertyCalls);
-		}
 
 		UBodySetup * BodySetup = SM->GetBodySetup();
 		if (!BodySetup)
@@ -4813,6 +4772,22 @@ FHoudiniMeshTranslator::CreateStaticMesh_MeshDescription()
 			MainBodySetup->CollisionTraceFlag = MainStaticMeshCTF;
 		}
 
+		// Update property attributes on the SM
+		TArray<FHoudiniGenericAttribute> PropertyAttributes;
+		if (FHoudiniEngineUtils::GetGenericPropertiesAttributes(
+			CurrentObjId.GeoId,
+			CurrentObjId.PartId,
+			true,
+			CurrentObjId.PrimitiveIndex,
+			INDEX_NONE,
+			CurrentObjId.PointIndex,
+			PropertyAttributes))
+		{
+			// Defer post edit change calls until after all property values have been set, since the static mesh
+			// build function is called from PostEditChangeProperty.
+			constexpr bool bDeferPostEditChangePropertyCalls = true;
+			FHoudiniEngineUtils::UpdateGenericPropertiesAttributes(SM, PropertyAttributes, 0, bDeferPostEditChangePropertyCalls);
+		}
 
 		if (bDoTiming)
 		{
