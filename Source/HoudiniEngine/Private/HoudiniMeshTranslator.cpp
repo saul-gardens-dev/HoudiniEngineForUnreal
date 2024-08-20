@@ -3421,11 +3421,13 @@ FHoudiniMeshTranslator::CreateStaticMesh_MeshDescription()
 	///////////////////////////////////////////////////////////////////////
 	// THIS FUNCTION IS DEPRECATED AND WILL REMOVED IN THE NEXT RELEASE.
 	///////////////////////////////////////////////////////////////////////
-	
+
 	// Time limit for processing
 	bDoTiming = CVarHoudiniEngineMeshBuildTimer.GetValueOnAnyThread() != 0.0;
 
 	double time_start = FPlatformTime::Seconds();
+
+	bool bIsGammaCorrectionDisabled = IsGammaCorrectionDisabled(HGPO.GeoId, HGPO.PartId);
 
 	// Keep a copy of the initial package params, since PackageParams is modified in place when resolving attributes
 	FHoudiniPackageParams InitialPackageParams = PackageParams;
@@ -4444,7 +4446,15 @@ FHoudiniMeshTranslator::CreateStaticMesh_MeshDescription()
 					{
 						Color.A = FMath::Clamp(SplitColors[SplitIndex * AttribInfoColors.tupleSize + 3], 0.0f, 1.0f);
 					}
-					VertexInstanceColors[VertexInstanceID] = FVector4f(Color);
+
+					if (bIsGammaCorrectionDisabled)
+					{
+						// Mesh Description colors are always gamma corrected by Unreal. So we have to reverse the correction
+						// if this flag is enabled.
+						Color =  FLinearColor::FromSRGBColor(Color.ToFColor(false));
+					}
+					FVector4f VertexColor = FVector4f(Color);
+					VertexInstanceColors[VertexInstanceID] = VertexColor;
 
 					// UVs
 					for (int32 UVIndex = 0; UVIndex < SplitUVSets.Num(); UVIndex++)
@@ -4868,6 +4878,8 @@ FHoudiniMeshTranslator::CreateHoudiniStaticMesh()
 
 	// Keep a copy of the initial package params, since PackageParams is modified in place when resolving attributes
 	FHoudiniPackageParams InitialPackageParams = PackageParams;
+
+	bool bIsGammaCorrectionDisabled = IsGammaCorrectionDisabled(HGPO.GeoId, HGPO.PartId);
 
 	// Start by updating the vertex list
 	if (!UpdatePartVertexList())
@@ -5471,7 +5483,13 @@ FHoudiniMeshTranslator::CreateHoudiniStaticMesh()
 							{
 								VertexLinearColor.A = 1.0f;
 							}
-							const FColor VertexColor = VertexLinearColor.ToFColor(false);
+
+							FColor VertexColor = VertexLinearColor.ToFColor(false);
+
+							// If Gamma correction is disabled, de-convert the color. Since SetTriangleVertexColor() will apply gamma.
+							if (bIsGammaCorrectionDisabled)
+								VertexColor = FLinearColor::FromSRGBColor(VertexColor).ToFColor(false);
+
 							FoundStaticMesh->SetTriangleVertexColor(TriangleIdx, TriWindingIndex[ElementIdx], VertexColor);
 						}
 					}
@@ -10110,6 +10128,25 @@ FHoudiniMeshTranslator::ProcessMaterialsForHSM(
 		FoundStaticMaterials.Empty();
 		FoundStaticMaterials.Add(FStaticMaterial(MaterialInterface));
 	}
+}
+
+
+bool FHoudiniMeshTranslator::IsGammaCorrectionDisabled(HAPI_NodeId  NodeId, HAPI_PartId PartId)
+{
+	HAPI_AttributeInfo AttributeInfo;
+	FHoudiniApi::AttributeInfo_Init(&AttributeInfo);
+
+	TArray<int> Values;
+	FHoudiniEngineUtils::HapiGetAttributeDataAsInteger(
+		NodeId, PartId,
+		HAPI_UNREAL_ATTRIB_DISABLE_GAMMA_CORRECTION,
+		AttributeInfo,
+		Values);
+
+	if (Values.IsEmpty())
+		return false;
+
+	return Values[0] != 0;
 }
 
 #undef LOCTEXT_NAMESPACE
