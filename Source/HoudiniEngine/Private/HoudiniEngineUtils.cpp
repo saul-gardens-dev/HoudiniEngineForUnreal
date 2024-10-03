@@ -665,6 +665,20 @@ FHoudiniEngineUtils::RescanWorldPath(UWorld* InWorld)
 	AssetRegistry.ScanPathsSynchronous(Packages, true);
 }
 
+TArray<AActor*>
+FHoudiniEngineUtils::FindActorsWithNameNoNumber(UClass* InClass, UWorld* InWorld, const FString& InActorName)
+{
+	TArray<AActor*> Results;
+
+	for (TActorIterator<AActor> ActorIt(InWorld, InClass); ActorIt; ++ActorIt)
+	{
+		AActor * Actor = *ActorIt;
+		if (Actor->GetFName().GetPlainNameString() == InActorName)
+			Results.Add(Actor);
+	}
+	return Results;
+}
+
 AActor*
 FHoudiniEngineUtils::FindOrRenameInvalidActorGeneric(UClass* InClass, UWorld* InWorld, const FString& InName, AActor*& OutFoundActor)
 {
