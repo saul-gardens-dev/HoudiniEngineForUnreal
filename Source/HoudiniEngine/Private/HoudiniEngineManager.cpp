@@ -45,6 +45,7 @@
 #include "Misc/ScopedSlowTask.h"
 #include "Containers/Ticker.h"
 #include "HAL/IConsoleManager.h"
+#include "LevelInstance/LevelInstanceInterface.h"
 
 #if WITH_EDITOR
 	#include "Editor.h"
@@ -231,7 +232,10 @@ FHoudiniEngineManager::Tick(float DeltaTime)
 				// 3. Add the "Current" HAC
 				ComponentsToProcess.Add(CurrentComponent);
 			}
-
+			if (CurrentComponent->GetAssetState() == EHoudiniAssetState::Dormant)
+			{
+				CurrentComponent->UpdateDormantStatus();
+			}
 			// Set the LastTickTime on the "current" HAC to 0 to ensure it's treated first
 			if (nIdx == CurrentIndex)
 			{
@@ -335,6 +339,7 @@ FHoudiniEngineManager::Tick(float DeltaTime)
 				case EHoudiniAssetState::NeedRebuild:
 				case EHoudiniAssetState::NeedDelete:
 				case EHoudiniAssetState::Deleting:
+				case EHoudiniAssetState::Dormant:
 					bKeepProcessing = false;
 					break;
 			}
@@ -503,6 +508,14 @@ FHoudiniEngineManager::ProcessComponent(UHoudiniAssetComponent* HAC)
 	{
 		case EHoudiniAssetState::NeedInstantiation:
 		{
+			// If this HDA is part of an uneditable level instance, mark it as dormant.
+			auto * LevelInstance = HAC->GetLevelInstance();
+			if (LevelInstance && !LevelInstance->IsEditing())
+			{
+				HAC->SetAssetState(EHoudiniAssetState::Dormant);
+				break;
+			}
+
 			// Do nothing unless the HAC has been updated
 			if (HAC->NeedUpdate())
 			{
@@ -823,6 +836,9 @@ FHoudiniEngineManager::ProcessComponent(UHoudiniAssetComponent* HAC)
 		{
 			break;
 		}
+
+		case EHoudiniAssetState::Dormant:
+			break;
 	}
 }
 

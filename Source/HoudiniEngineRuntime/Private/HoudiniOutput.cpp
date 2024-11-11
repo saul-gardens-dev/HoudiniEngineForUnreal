@@ -1431,12 +1431,9 @@ void FHoudiniOutputObject::DestroyCookedData()
 	//--------------------------------------------------------------------------------------------------------------------
 
 	if (IsValid(OutputObject))
-		OutputObject->ConditionalBeginDestroy();
 
 	OutputObject = nullptr;
 
-	if (IsValid(ProxyObject))
-		ProxyObject->ConditionalBeginDestroy();
 	ProxyObject = nullptr;
 
 	//--------------------------------------------------------------------------------------------------------------------
