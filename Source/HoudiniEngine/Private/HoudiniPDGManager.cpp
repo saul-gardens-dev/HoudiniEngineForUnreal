@@ -2177,8 +2177,14 @@ FHoudiniPDGManager::IsPDGAsset(const HAPI_NodeId& InAssetId)
 		if (Result == HAPI_RESULT_SUCCESS && AttribInfo.exists)
 		{
 			TArray<int32> IntData;
-			FHoudiniHapiAccessor Accessor(InAssetId, 0, HAPI_UNREAL_ATTRIB_PDG_ASSET);
-			bool bSuccess = Accessor.GetAttributeData(HAPI_ATTROWNER_DETAIL, IntData, 0, 1);
+			bool bSuccess = FHoudiniEngineUtils::HapiGetAttributeDataAsInteger(
+				InAssetId, 0, 
+				HAPI_UNREAL_ATTRIB_PDG_ASSET,
+				AttribInfo,
+				IntData, 1,
+				HAPI_ATTROWNER_DETAIL,
+				0, 1);
+
 			if (bSuccess && !IntData.IsEmpty())
 			{
 				return (IntData[0] != 0);
