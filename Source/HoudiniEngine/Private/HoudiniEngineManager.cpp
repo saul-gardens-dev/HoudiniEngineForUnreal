@@ -590,6 +590,7 @@ FHoudiniEngineManager::ProcessComponent(UHoudiniAssetComponent* HAC)
 				{
 					// We couldnt create the node, change the state back to NeedInstantiation
 					HAC->SetAssetState(EHoudiniAssetState::NeedInstantiation);
+					HAC->bRecookRequested = false;
 				}
 			}
 			else
@@ -905,11 +906,13 @@ FHoudiniEngineManager::StartTaskAssetInstantiation(UHoudiniAsset* HoudiniAsset, 
 	if (HoudiniRuntimeSettings && AssetNames.Num() > 1)
 		bShowMultiAssetDialog = HoudiniRuntimeSettings->bShowMultiAssetDialog;
 
-	// TODO: Add multi selection dialog
 	if (bShowMultiAssetDialog )
 	{
-		// TODO: Implement
-		FHoudiniEngineUtils::OpenSubassetSelectionWindow(AssetNames, PickedAssetName);
+		if(!FHoudiniEngineUtils::OpenSubassetSelectionWindow(AssetNames, PickedAssetName))
+		{
+			HOUDINI_LOG_ERROR(TEXT("Cancelling asset instantiation - no asset choosen in the selection window."));
+			return false;
+		}
 	}
 #endif
 
