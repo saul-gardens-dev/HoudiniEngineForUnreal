@@ -146,7 +146,7 @@ FHoudiniEngineCommands::SaveHIPFile()
 	if (!DesktopPlatform || !FHoudiniEngineUtils::IsInitialized())
 		return;
 
-	TArray<FString> SaveFilenames;
+	TArray< FString > SaveFilenames;
 	bool bSaved = false;
 	void * ParentWindowWindowHandle = NULL;
 
@@ -155,22 +155,16 @@ FHoudiniEngineCommands::SaveHIPFile()
 	if (MainFrameParentWindow.IsValid() && MainFrameParentWindow->GetNativeWindow().IsValid())
 		ParentWindowWindowHandle = MainFrameParentWindow->GetNativeWindow()->GetOSWindowHandle();
 
-	FString FileType = TEXT("Houdini HIP file|*.hip");
-	if(FHoudiniEngine::Get().IsLicenseIndie())
-		FileType = TEXT("Houdini HIP file (Limited Commerical)|*.hiplc");
-	else if(FHoudiniEngine::Get().IsLicenseEducation())
-		FileType = TEXT("Houdini HIP file (Non Commercial)|*.hipnc");
-
 	bSaved = DesktopPlatform->SaveFileDialog(
 		ParentWindowWindowHandle,
 		NSLOCTEXT("SaveHIPFile", "SaveHIPFile", "Saves a .hip file of the current Houdini scene.").ToString(),
 		*(FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_EXPORT)),
 		TEXT(""),
-		FileType,
+		TEXT("Houdini HIP file|*.hip"),
 		EFileDialogFlags::None,
 		SaveFilenames);
 
-	if(bSaved && SaveFilenames.Num())
+	if (bSaved && SaveFilenames.Num())
 	{
 		// Add a slate notification
 		FString Notification = TEXT("Saving internal Houdini scene...");
@@ -196,17 +190,11 @@ FHoudiniEngineCommands::OpenInHoudini()
 		return;
 	}
 
-	FString FileExtension = TEXT(".hip");
-	if (FHoudiniEngine::Get().IsLicenseIndie())
-		FileExtension = TEXT(".hiplc");
-	else if (FHoudiniEngine::Get().IsLicenseEducation())
-		FileExtension = TEXT(".hipnc");
-
 	// First, saves the current scene as a hip file
 	// Creates a proper temporary file name
 	FString UserTempPath = FPaths::CreateTempFilename(
 		FPlatformProcess::UserTempDir(),
-		TEXT("HoudiniEngine"), *FileExtension);
+		TEXT("HoudiniEngine"), TEXT(".hip"));
 
 	// Save HIP file through Engine.
 	std::string TempPathConverted(TCHAR_TO_UTF8(*UserTempPath));
