@@ -44,7 +44,6 @@
 #include "PackageTools.h"
 #include "LandscapeSplineControlPoint.h"
 #include "LandscapeSplineSegment.h"
-#include "LandscapeUtils.h"
 #include "Async/ParallelFor.h"
 
 #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 5
