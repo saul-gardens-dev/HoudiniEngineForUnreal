@@ -146,7 +146,7 @@ IMPLEMENT_SIMPLE_HOUDINI_AUTOMATION_TEST(FHoudiniEditorTestInstancesHLOD, "Houdi
 		// Check first output instancer has DataLayer1.
 		AActor* Actor = Cast<AActor>(StaticLoadObject(UObject::StaticClass(), nullptr, *BakedObject0.Actor));
 		UHLODLayer* HODLayer0 = Actor->GetHLODLayer();
-		HOUDINI_TEST_NOT_NULL(HODLayer0);
+		HOUDINI_TEST_NOT_NULL_ON_FAIL(HODLayer0, return true);
 		HOUDINI_TEST_EQUAL(HODLayer0->GetName(), TEXT("TestHLODLayer1"));
 		//HOUDINI_TEST_EQUAL();
 

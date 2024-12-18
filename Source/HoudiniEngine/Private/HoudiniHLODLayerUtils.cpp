@@ -53,7 +53,7 @@ FHoudiniHLODLayerUtils::GetHLODLayers(HAPI_NodeId NodeId, HAPI_PartId PartId, HA
 	HAPI_AttributeInfo AttribInfo;
 	TArray<FString> HLODNames;
 	if(!FHoudiniEngineUtils::HapiGetAttributeDataAsString(
-		NodeId, NodeId, HAPI_UNREAL_ATTRIB_HLOD_LAYER,
+		NodeId, PartId, HAPI_UNREAL_ATTRIB_HLOD_LAYER,
 		AttribInfo, HLODNames, 1, Owner, Index, 1))
 	{
 		return {};
@@ -76,7 +76,7 @@ FHoudiniHLODLayerUtils::GetHLODLayers(HAPI_NodeId NodeId, HAPI_PartId PartId, HA
 	TArray<FString> HLODNames;
 	HAPI_AttributeInfo AttribInfo;
 	if(!FHoudiniEngineUtils::HapiGetAttributeDataAsString(
-		NodeId, NodeId, HAPI_UNREAL_ATTRIB_HLOD_LAYER,
+		NodeId, PartId, HAPI_UNREAL_ATTRIB_HLOD_LAYER,
 		AttribInfo, HLODNames, 1, Owner))
 	{
 		return {};

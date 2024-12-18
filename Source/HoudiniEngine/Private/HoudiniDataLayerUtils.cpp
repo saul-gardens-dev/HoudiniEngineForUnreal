@@ -164,7 +164,7 @@ FHoudiniDataLayerUtils::GetDataLayers(HAPI_NodeId NodeId, HAPI_PartId PartId, HA
 
 	HAPI_AttributeInfo AttribInfo;
 	if(!FHoudiniEngineUtils::HapiGetAttributeDataAsInteger(
-		NodeId, NodeId, HAPI_UNREAL_ATTRIB_CREATE_DATA_LAYERS, AttribInfo, CreateFlags, 1))
+		NodeId, PartId, HAPI_UNREAL_ATTRIB_CREATE_DATA_LAYERS, AttribInfo, CreateFlags, 1))
 	{
 		return {};
 	}
