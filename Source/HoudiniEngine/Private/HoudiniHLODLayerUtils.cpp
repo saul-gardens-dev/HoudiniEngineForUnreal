@@ -28,6 +28,7 @@
 
 #include "HoudiniEngine.h"
 #include "WorldPartition/HLOD/HLODLayer.h"
+#include "Landscape.h"
 #include "LandscapeStreamingProxy.h"
 
 void FHoudiniHLODLayerUtils::AddActorToHLOD(AActor* Actor, const FString& AssetRef)
