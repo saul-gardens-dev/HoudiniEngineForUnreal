@@ -687,8 +687,11 @@ FHoudiniOutputTranslator::UpdateOutputs(
 			FHoudiniOutputObjectIdentifier & Id = It.Key;
 			FHoudiniOutputObject & Obj = It.Value;
 
-			Obj.DataLayers = FHoudiniDataLayerUtils::GetDataLayers(Id.GeoId, Id.PartId);
-			Obj.HLODLayers = FHoudiniHLODLayerUtils::GetHLODLayers(Id.GeoId, Id.PartId);
+			if (Obj.DataLayers.IsEmpty())
+				Obj.DataLayers = FHoudiniDataLayerUtils::GetDataLayers(Id.GeoId, Id.PartId);
+
+			if (Obj.HLODLayers.IsEmpty())
+				Obj.HLODLayers = FHoudiniHLODLayerUtils::GetHLODLayers(Id.GeoId, Id.PartId);
 		}
 	}
 
