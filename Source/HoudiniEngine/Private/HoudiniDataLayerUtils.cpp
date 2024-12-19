@@ -45,10 +45,9 @@
 //#include "DataLayer/DataLayerEditorSubsystem.h"
 #endif
 
+#if HOUDINI_ENABLE_DATA_LAYERS
 void FHoudiniDataLayerUtils::ApplyDataLayersToActor(AActor* Actor, TArray<FHoudiniDataLayer> & DataLayers, TMap<FString, UDataLayerInstance*>& DataLayerLookup)
 {
-#if HOUDINI_ENABLE_DATA_LAYERS
-
     for (auto& Layer : DataLayers)
     {
 		UDataLayerInstance** DataLayerInstance = DataLayerLookup.Find(Layer.Name);
@@ -79,8 +78,8 @@ void FHoudiniDataLayerUtils::ApplyDataLayersToActor(AActor* Actor, TArray<FHoudi
 			}
 		}
 	}
-#endif
 }
+#endif
 
 #if HOUDINI_ENABLE_DATA_LAYERS
 UDataLayerInstance * FHoudiniDataLayerUtils::FindOrCreateDataLayerInstance(

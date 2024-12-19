@@ -139,7 +139,7 @@ void FHoudiniHLODLayerUtils::ApplyHLODLayersToActor(const FHoudiniPackageParams&
 #if ENGINE_MAJOR_VERSION >= 5 && ENGINE_MINOR_VERSION >= 1
 		TArray<TWeakObjectPtr<ALandscapeStreamingProxy>> Proxies = Landscape->GetLandscapeInfo()->StreamingProxies;
 #else
-		TArray<TObjectPtr<ALandscapeStreamingProxy>> Proxies = Proxy->GetLandscapeInfo()->Proxies;
+		TArray<TObjectPtr<ALandscapeStreamingProxy>> Proxies = Landscape->GetLandscapeInfo()->Proxies;
 #endif
 
 		for(TWeakObjectPtr<ALandscapeStreamingProxy> Child : Proxies)

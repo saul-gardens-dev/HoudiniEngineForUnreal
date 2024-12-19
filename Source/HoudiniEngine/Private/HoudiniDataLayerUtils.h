@@ -54,14 +54,9 @@ struct FHoudiniUnrealDataLayerInfo
 	FString Name;
 };
 
-
 class HOUDINIENGINE_API FHoudiniDataLayerUtils
 {
 public:
-	// Extracts the data layer from the Houdini Geo/Part and applies it to the Actor. Normally
-	// called after cooking/baking.
-	static void ApplyDataLayersToActor(AActor* Actor, TArray<FHoudiniDataLayer>& DataLayers, TMap<FString, UDataLayerInstance*>& DataLayerLookup);
-
 	static TArray<FHoudiniDataLayer> GetDataLayers(HAPI_NodeId NodeId, HAPI_PartId PartId);
 	static TArray<FHoudiniDataLayer> GetDataLayers(HAPI_NodeId NodeId, HAPI_PartId PartId, HAPI_GroupType GroupType, int Index);
 	static TArray<FHoudiniAttributeDataLayer> GetDataLayers(HAPI_NodeId NodeId, HAPI_PartId PartId, HAPI_GroupType GroupType);
@@ -78,6 +73,10 @@ public:
 	static bool SetVexCode(HAPI_NodeId VexNodeId, AActor* Actor);
 
 #if HOUDINI_ENABLE_DATA_LAYERS
+	// Extracts the data layer from the Houdini Geo/Part and applies it to the Actor. Normally
+	// called after cooking/baking.
+	static void ApplyDataLayersToActor(AActor* Actor, TArray<FHoudiniDataLayer>& DataLayers, TMap<FString, UDataLayerInstance*>& DataLayerLookup);
+
 	static void AddActorToLayer(const FHoudiniPackageParams& Params, AWorldDataLayers* WorldDataLayers, AActor* Actor, const FHoudiniDataLayer& Layer);
 	static UDataLayerAsset* CreateDataLayerAsset(const FHoudiniPackageParams& Params, const FString & LayerName);
 

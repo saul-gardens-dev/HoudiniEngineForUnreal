@@ -805,7 +805,7 @@ FHoudiniEngineBakeUtils::BakeHoudiniOutputsToActors(
 
 	// Due to a bug in 5.3 and earlier we need to create all the data layers in one go and store their values,
 	// since there seem to be a delay in creating new data layers.
-
+#if HOUDINI_ENABLE_DATA_LAYERS
 	TMap<FString, UDataLayerInstance*> DataLayerLookup;
 
 	for(int Index = 0; Index < NewBakedActors.Num(); Index++)
@@ -836,6 +836,7 @@ FHoudiniEngineBakeUtils::BakeHoudiniOutputsToActors(
 			}
 		}
 	}
+#endif
 
 	for(int Index = 0; Index < NewBakedActors.Num(); Index++)
 	{
@@ -847,7 +848,9 @@ FHoudiniEngineBakeUtils::BakeHoudiniOutputsToActors(
 		
 		if (IsValid(BakedActor.Actor))
 		{
+#if HOUDINI_ENABLE_DATA_LAYERS
 			FHoudiniDataLayerUtils::ApplyDataLayersToActor(BakedActor.Actor, OutputObject.DataLayers, DataLayerLookup);
+#endif
 			FHoudiniHLODLayerUtils::ApplyHLODLayersToActor(PackageParams[Index], BakedActor.Actor, OutputObject.HLODLayers);
 		}
 	}
