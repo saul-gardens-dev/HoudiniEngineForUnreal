@@ -33,6 +33,7 @@
 
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
+#include "Engine/Light.h"
 #include "Engine/World.h"
 #include "Internationalization/Internationalization.h"
 #include "Runtime/Launch/Resources/Version.h"
@@ -177,16 +178,23 @@ UHoudiniInstancedActorComponent::SetInstanceTransformAt(const int32& Idx, const 
 void 
 UHoudiniInstancedActorComponent::ClearAllInstances()
 {
-    for ( AActor* Instance : InstancedActors )
-    {
-        if (IsValid(Instance))
-        {
-            UWorld* const World = Instance->GetWorld();
-            if (IsValid(World))
-                World->DestroyActor(Instance);
-        }
-    }
-    InstancedActors.Empty();
+
+	for(AActor* Instance : InstancedActors)
+	{
+		if(IsValid(Instance) && IsValid(Instance->GetWorld()))
+		{
+			// Lights can take a relatively long time to destroy their lighting caches. Oddly,
+			// setting to moveable prevents this.
+			ALight* Light = Cast<ALight>(Instance);
+			if (IsValid(Light))
+				Light->SetMobility(EComponentMobility::Movable);
+
+			Instance->GetWorld()->DestroyActor(Instance);
+		}
+
+	}
+
+	InstancedActors.Empty();
 }
 
 
